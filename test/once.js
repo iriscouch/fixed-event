@@ -1,40 +1,43 @@
-// The changes_couchdb command-line interface.
+// Once API tests
 //
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-var util = require('util'), I = util.inspect
+var tap = require('tap')
+  , test = tap.test
+  , util = require('util')
   , assert = require('assert')
 
-var lib = require('../lib')
-  , Once = lib.Once
+var api = require('../api')
+  , Once = api.Once
 
 
-var state = {};
-module.exports = [ // TESTS
-
-function setup(done) {
-  // Nothing to do
-  done()
-},
-
-// =-=-=-=-=-=-=-=-=
-
-function once_api(done) {
+test('Once API', function(t) {
   var o = new Once;
 
   o.on_done(handler)
   function handler(a, b, c) {
-    assert.equal(a, 'Apple', 'First result passed back to Once on_done')
-    assert.equal(b, 'Bone' , 'Second result passed back to Once on_done')
-    assert.equal(c, 'CouchDB', 'Third result passed back to Once on_done')
-    done()
+    t.equal(a, 'Apple', 'First result passed back to Once on_done')
+    t.equal(b, 'Bone' , 'Second result passed back to Once on_done')
+    t.equal(c, 'CouchDB', 'Third result passed back to Once on_done')
+    t.end()
   }
 
   o.job(function(callback) {
     callback('Apple', 'Bone', 'CouchDB');
   })
-},
+})
 
-function once_api_delayed(done) {
+test('Once API delayed', function(t) {
   var o = new Once;
 
   o.job(function(callback) {
@@ -42,15 +45,14 @@ function once_api_delayed(done) {
   })
 
   o.on_done(function(foo, bar, baz) {
-    assert.equal(foo, 'foo', 'First result passed back to Once on_done')
-    assert.equal(bar, 'bar' , 'Second result passed back to Once on_done')
-    assert.equal(baz, 'baz', 'Third result passed back to Once on_done')
-    done()
+    t.equal(foo, 'foo', 'First result passed back to Once on_done')
+    t.equal(bar, 'bar' , 'Second result passed back to Once on_done')
+    t.equal(baz, 'baz', 'Third result passed back to Once on_done')
+    t.end()
   })
-},
+})
 
-{'timeout_coefficient':5},
-function many_waiters(done) {
+test('Many waiters', function(t) {
   var o = new Once
     , waiters = 5000
     , delay = 200
@@ -62,8 +64,8 @@ function many_waiters(done) {
   o.on_done(function() {
     setTimeout(function() {
       for(var a = 0; a < waiters; a++)
-        assert.ok(found[a], 'Waiter number ' + a + ' fired')
-      done();
+        t.ok(found[a], 'Waiter number ' + a + ' fired')
+      t.end()
     }, 500)
   })
 
@@ -78,6 +80,4 @@ function many_waiters(done) {
       found[label] = true;
     }
   }
-},
-
-] // TESTS
+})
