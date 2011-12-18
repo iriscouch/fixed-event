@@ -88,7 +88,7 @@ test('Existing listeners join the fixed event', function(t) {
 })
 
 test('Defaultable fixed event', function(t) {
-  var fixed = api.defaults({ 'fixed': 'fixed_ev' })
+  var fixed = api.defaults({ 'events': 'fixed_ev' })
     , o = new fixed.EventEmitter
 
   o.emit('normal_ev')
@@ -107,7 +107,7 @@ test('Defaultable fixed event', function(t) {
 })
 
 test('Defaultable fixed event list', function(t) {
-  var fixed = api.defaults({ 'fixed': ['fixed_1', 'fixed_2', 'fixed_3'] })
+  var fixed = api.defaults({ 'events': ['fixed_1', 'fixed_2', 'fixed_3'] })
     , o = new fixed.EventEmitter
 
   o.emit('normal_1', 'normal_val_1')
@@ -134,7 +134,7 @@ test('Defaultable fixed event list', function(t) {
 })
 
 test('Defaultable fixed event object', function(t) {
-  var fixed = api.defaults({ 'fixed': { 'event1':'value1' , 'event2':'value2' } })
+  var fixed = api.defaults({ 'events': { 'event1':'value1' , 'event2':'value2' } })
     , o = new fixed.EventEmitter
 
   t.throws(function() { o.emit('event1') }, 'Cannot re-emit fixed event "event1"')

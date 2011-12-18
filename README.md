@@ -54,14 +54,14 @@ Fixed Event is [defaultable][def]. The default option `fixed` allows pre-setting
 
 ```javascript
 var fixed = require('fixed-event')
-  , done_is_fixed    = fixed.defaults({ fixed:"done" })
-  , ducks_are_fixed  = fixed.defaults({ fixed:["Huey", "Dewey", "Louie"] })
-  , values_are_fixed = fixed.defaults({ fixed:{ enter: "You entered!"
-                                              , exit : ["You", "exited"]
-                                              }})
+  , done_is_fixed    = fixed.defaults({ events:"done" })
+  , ducks_are_fixed  = fixed.defaults({ events:["Huey", "Dewey", "Louie"] })
+  , values_are_fixed = fixed.defaults({ events:{ enter: "You entered!"
+                                               , exit : ["You", "exited"]
+                                               }})
 ```
 
-The `fixed` default supports different data types
+The `events` default supports different data types
 
 * **string** | Automatically runs `.fix()` for that name (no events fired yet)
 * **array** | Automatically run `.fix()` for all those names (no events fired yet)
