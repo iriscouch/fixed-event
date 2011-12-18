@@ -16,7 +16,7 @@ Fixed Event is available as an NPM module.
 
 ```javascript
 var fixed = require('fixed-event')
-var status = fixed.EventEmitter
+var status = new fixed.EventEmitter
 
 // Listening before the event fires
 status.on('ready', function(result) {
@@ -70,17 +70,18 @@ The `events` default supports different data types
 Thus, the above code could be used like so
 
 ```javascript
-done_is_fixed.emit('done', 'Hi, listener below me!')
-done_is_fixed.on('done', function(hi) { console.log(hi + ' Hi, event above me!') })
+var state = new done_is_fixed.EventEmitter
+state.emit('done', 'Hi, listener below me!')
+state.on('done', function(hi) { console.log('Loud and clear.') }) // Fires
 
-
-// Both listeners will fire.
-ducks_are_fixed.emit('Dewey', 'Duck')
-ducks_are_fixed.on('Dewey', function() { 'Hewey event fired' })
-ducks_are_fixed.on('Dewey', function() { 'Hewey event fired again' })
+var bros = new ducks_are_fixed.EventEmitter
+bros.emit('Dewey', 'Duck')
+bros.on('Dewey', function() { 'Dewey event fired' }) // Fires
+bros.on('Dewey', function() { 'Dewey fired again' }) // Also fires
 
 // This will fire immediately
-values_are_fixed.on('enter', function(msg) { console.log(msg) })
+var room = new values_are_fixed.EventEmitter
+room.on('enter', function(msg) { console.log(msg) }) // output: "You entered!"
 ```
 
 ## Tests
