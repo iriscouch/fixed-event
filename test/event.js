@@ -132,3 +132,25 @@ test('Defaultable fixed event list', function(t) {
     t.end()
   })
 })
+
+test('Defaultable fixed event object', function(t) {
+  var fixed = api.defaults({ 'fixed': { 'event1':'value1' , 'event2':'value2' } })
+    , o = new fixed.EventEmitter
+
+  t.throws(function() { o.emit('event1') }, 'Cannot re-emit fixed event "event1"')
+  t.doesNotThrow(function() { o.emit('fine') }, 'Can emit a non-fixed event')
+
+  var result = {}
+  o.on('event1', function(val) { result.event1 = val })
+  o.on('event2', function(val) { result.event2 = val })
+  o.on('event3', function(val) { result.event3 = val })
+  o.on('fine', function(val ) { result.fine = val })
+
+  process.nextTick(function() {
+    t.equal(Object.keys(result).length, 2, 'Only two events (the fixed ones) fired')
+    t.equal(result.event1, 'value1', 'Fixed event 1 fired with result')
+    t.equal(result.event2, 'value2', 'Fixed event 2 fired with result')
+
+    t.end()
+  })
+})
