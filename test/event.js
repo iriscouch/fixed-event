@@ -36,3 +36,53 @@ test('EventEmitter works like normal by default', function(t) {
     t.end()
   })
 })
+
+test('Fix an event', function(t) {
+  var o = new EE
+  o.fix('something')
+
+  var hits = { 'before':false, 'after':false }
+  o.on('something', function() { hits.before = true })
+  o.emit('something')
+  o.on('something', function() { hits.after = true })
+
+  process.nextTick(function() {
+    t.ok(hits.before, 'Subscribing before an event catches it')
+    t.ok(hits.after, 'Subscribing after an event catches it')
+
+    t.end()
+  })
+})
+
+test('fixed() = fix + emit', function(t) {
+  var o = new EE
+
+  var hits = 0
+  o.fixed('ev', 'one')
+  o.on('ev', function() { hits +=  1 })
+  o.on('ev', function() { hits += 10 })
+
+  process.nextTick(function() {
+    t.equal(hits, 11, 'Both events fired after the fixed() call')
+    t.end()
+  })
+})
+
+test('Existing listeners join the fixed event', function(t) {
+  var o = new EE
+
+  var results = {}
+  o.on('ev', function(result) { results[result] = true })
+  o.emit('ev', 'normal emit')
+
+  o.fixed('ev', 'fixed emit')
+  o.on('ev', function(result) { results.after = result })
+
+  process.nextTick(function() {
+    t.ok(results['normal emit'], 'The normal listener ran normally')
+    t.equal(results.after, 'fixed emit', 'The listener attached after the fix got the event')
+    t.ok(results['fixed emit'], 'The normal listener got the fixed response')
+
+    t.end()
+  })
+})
