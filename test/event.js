@@ -86,3 +86,22 @@ test('Existing listeners join the fixed event', function(t) {
     t.end()
   })
 })
+
+test('Defaultable fixed event', function(t) {
+  var fixed = api.defaults({ 'fixed': 'fixed_ev' })
+    , o = new fixed.EventEmitter
+
+  o.emit('normal_ev')
+  o.emit('fixed_ev')
+
+  var result = {}
+  o.on('normal_ev', function() { result.normal = true })
+  o.on('fixed_ev', function() { result.fixed = true })
+
+  process.nextTick(function() {
+    t.false(result.normal_ev, 'Normal listener subscribed after emit and did not fire')
+    t.ok(result.fixed, 'Fixed listener subscribed after emit and did fire')
+
+    t.end()
+  })
+})
