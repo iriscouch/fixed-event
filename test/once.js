@@ -52,6 +52,36 @@ test('Once API delayed', function(t) {
   })
 })
 
+test('Job only runs once', function(t) {
+  var o = new Once
+
+  var results = {}
+  // Two subscriptions before, two after.
+
+  o.on_done(function() { results.one = true })
+  o.on_done(function() { results.two = true })
+
+  var runs = 0
+  o.job(function(callback) {
+    runs += 1
+    callback('blah')
+  })
+
+  o.on_done(function() { results.three = true })
+  o.on_done(function() { results.four = true })
+
+  setTimeout(check_results, 100)
+  function check_results() {
+    t.equal(runs, 1, 'Only one run')
+    t.ok(results.one, 'First callback')
+    t.ok(results.two, 'Second callback')
+    t.ok(results.three, 'Third callback')
+    t.ok(results.four, 'Fourth callback')
+
+    t.end()
+  }
+})
+
 test('Many waiters', function(t) {
   var o = new Once
     , waiters = 5000
