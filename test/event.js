@@ -105,3 +105,30 @@ test('Defaultable fixed event', function(t) {
     t.end()
   })
 })
+
+test('Defaultable fixed event list', function(t) {
+  var fixed = api.defaults({ 'fixed': ['fixed_1', 'fixed_2', 'fixed_3'] })
+    , o = new fixed.EventEmitter
+
+  o.emit('normal_1', 'normal_val_1')
+  o.emit('fixed_1', 'val_1')
+  o.emit('normal_2', 'normal_val_2')
+  o.emit('fixed_2', 'val_2')
+
+  var results = {}
+  o.on('fixed_1', function(val) { results.fixed_1 = val })
+  o.on('fixed_2', function(val) { results.fixed_2 = val })
+  o.on('fixed_3', function(val) { results.fixed_3 = val })
+
+  o.emit('normal_3', 'normal_val_3')
+  o.emit('fixed_3', 'val_3')
+
+  process.nextTick(function() {
+    t.equal(Object.keys(results).length, 3, 'Got 3 results')
+    t.equal(results.fixed_1, 'val_1', 'Fixed event 1 fired')
+    t.equal(results.fixed_2, 'val_2', 'Fixed event 2 fired')
+    t.equal(results.fixed_3, 'val_3', 'Fixed event 3 fired')
+
+    t.end()
+  })
+})
