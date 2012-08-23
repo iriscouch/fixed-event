@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/iriscouch/fixed-event.png)](http://travis-ci.org/iriscouch/fixed-event)
 # Fixed Event: Once and forever event emitter
 
 Fixed Event is a Javascript and Node.js package for a common `EventEmitter` problem:
